@@ -60,6 +60,7 @@
       <PreprocessorDefinitions>RMU_PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)RedMakeUp\vendors\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -75,6 +76,7 @@
       <PreprocessorDefinitions>RMU_PLATFORM_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)RedMakeUp\vendors\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -88,9 +90,11 @@
     <ClInclude Include="src\RMU\Common.h" />
     <ClInclude Include="src\RedMakeUp.h" />
     <ClInclude Include="src\RMU\EntryPoint.h" />
+    <ClInclude Include="src\RMU\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RMU\Application.cpp" />
+    <ClCompile Include="src\RMU\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
