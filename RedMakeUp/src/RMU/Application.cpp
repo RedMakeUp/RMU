@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "Application.h"
-#include "Logger.h"
 
 RMU::Application::Application()
 {

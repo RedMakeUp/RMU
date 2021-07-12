@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Common.h"
-#include <memory>
-
 namespace RMU {
 	class RMU_API Application {
 	public:

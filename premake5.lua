@@ -114,6 +114,9 @@ project "RedMakeUp"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    pchheader "stdafx.h"
+    pchsource "%{prj.name}/src/stdafx.cpp"
+
     files
     {
         "%{prj.name}/src/**.h",
@@ -122,7 +125,8 @@ project "RedMakeUp"
 
     includedirs
     {
-        "%{prj.name}/vendors/spdlog/include"
+        "%{prj.name}/vendors/spdlog/include",
+        "%{prj.name}/src"
     }
 
     filter "system:Windows"
