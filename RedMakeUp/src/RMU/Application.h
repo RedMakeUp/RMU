@@ -1,12 +1,19 @@
 #pragma once
 
 namespace RMU {
+	class Window;
+
 	class RMU_API Application {
 	public:
 		Application();
 		virtual ~Application();
 
-		void Run();
+		int Run();
+
+		void DoFrame();
+
+	private:
+		std::unique_ptr<Window> m_mainWindow;
 	};
 
 	/// <summary>

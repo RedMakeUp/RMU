@@ -11,8 +11,8 @@ int main(int argc, char** argv) {
 	RMU_LOG_TRACE("Initialize Done!");
 
 	auto app = RMU::CreateApp();
-	app->Run();
+	int code = app->Run();
 
-	return 0;
+	return code;
 }
 #endif

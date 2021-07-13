@@ -10,6 +10,7 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <optional>
 
 #include "RMU/Logger.h"
 #include "RMU/Common.h"
