@@ -2,7 +2,7 @@
 bin/
 bin-int/
 .vs/
-.vscode/*
+**/.vscode/
 
 # Files
 *.user
