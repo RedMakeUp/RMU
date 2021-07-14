@@ -7,6 +7,7 @@
 	#include <Windows.h>
 	// ComPtr
 	#include <wrl.h>
+	using Microsoft::WRL::ComPtr;
 	// DirectX 12
 	#include <d3d12.h>
 	#include <dxgi1_6.h>
@@ -21,6 +22,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <optional>
+#include <chrono>
 
 #include "RMU/Logger.h"
 #include "RMU/Common.h"

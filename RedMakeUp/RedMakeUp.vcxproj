@@ -126,6 +126,7 @@
     <ClInclude Include="src\RMU\Application.h" />
     <ClInclude Include="src\RMU\Common.h" />
     <ClInclude Include="src\RMU\EntryPoint.h" />
+    <ClInclude Include="src\RMU\Graphics.h" />
     <ClInclude Include="src\RMU\Logger.h" />
     <ClInclude Include="src\RMU\Window.h" />
     <ClInclude Include="src\RedMakeUp.h" />
@@ -133,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RMU\Application.cpp" />
+    <ClCompile Include="src\RMU\Graphics.cpp" />
     <ClCompile Include="src\RMU\Logger.cpp" />
     <ClCompile Include="src\RMU\Window.cpp" />
     <ClCompile Include="src\stdafx.cpp">
