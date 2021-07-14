@@ -75,7 +75,6 @@ project "SandBox"
 
     includedirs
     {
-        "RedMakeUp/vendors/spdlog/include",
         "RedMakeUp/src"
     }
 
@@ -125,7 +124,6 @@ project "RedMakeUp"
 
     includedirs
     {
-        "%{prj.name}/vendors/spdlog/include",
         "%{prj.name}/src"
     }
 
