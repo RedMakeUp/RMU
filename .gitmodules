@@ -1,3 +1,0 @@
-[submodule "RedMakeUp/vendors"]
-	path = RedMakeUp/vendors/spdlog
-	url = https://github.com/gabime/spdlog.git
