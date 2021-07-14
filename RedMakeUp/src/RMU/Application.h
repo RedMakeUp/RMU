@@ -8,6 +8,8 @@ namespace RMU {
 		Application();
 		virtual ~Application();
 
+		bool Init();
+
 		int Run();
 
 		void DoFrame();

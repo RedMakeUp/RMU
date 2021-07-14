@@ -4,12 +4,22 @@
 
 RMU::Application::Application()
 {
-	m_mainWindow = std::make_unique<Window>(1280, 768, L"RedMakeUp Engine");
 
 }
 
 RMU::Application::~Application()
 {
+}
+
+bool RMU::Application::Init()
+{
+	if(!Window::Register()){
+		return false;
+	}
+
+	m_mainWindow = std::make_unique<Window>(1280, 768, L"RedMakeUp Engine");
+
+	return true;
 }
 
 int RMU::Application::Run()

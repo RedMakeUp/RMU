@@ -2,40 +2,28 @@
 #include "Window.h"
 
 namespace RMU {
-	/// <summary>
-	/// Initialize window class singleton
-	/// </summary>
-	Window::WindowClass Window::WindowClass::s_windowClass;
+	const wchar_t* Window::REGISTERED_NAME = L"RedMakeUp Engine";
 
-
-	inline const wchar_t* Window::WindowClass::GetName() noexcept
-	{
-		return s_className;
-	}
-
-	inline HINSTANCE Window::WindowClass::GetInstance() noexcept
-	{
-		return s_windowClass.m_hInst;
-	}
-
-	Window::WindowClass::WindowClass() noexcept
-		:m_hInst(GetModuleHandle(nullptr))
+	bool Window::Register()
 	{
 		WNDCLASSEX wc = {};// Zero Initialization
 		wc.cbSize = sizeof(wc);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = HandleMsgSetup;
-		wc.hInstance = GetInstance();
-		wc.lpszClassName = GetName();
-		RegisterClassEx(&wc);
+		wc.hInstance = GetModuleHandle(nullptr);
+		wc.lpszClassName = REGISTERED_NAME;
+		static ATOM atom = RegisterClassEx(&wc);
+
+		if (atom > 0) {
+			RMU_LOG_INFO("Registered window class");
+			return true;
+		}
+		else {
+			RMU_LOG_ERROR("Failed to register window class");
+			return false;
+		}
 	}
 
-	Window::WindowClass::~WindowClass() {
-		UnregisterClass(GetName(), GetInstance());
-	}
-}
-
-namespace RMU {
 	Window::Window(int width, int height, const wchar_t* name)
 		:m_height(height), m_width(width)
 	{
@@ -52,14 +40,14 @@ namespace RMU {
 
 		// Create the actual window
 		m_hWnd = CreateWindow(
-			WindowClass::GetName(),
+			REGISTERED_NAME,
 			name,
 			style,
 			CW_USEDEFAULT, CW_USEDEFAULT,
 			rect.right - rect.left,
 			rect.bottom - rect.top,
 			nullptr, nullptr,
-			WindowClass::GetInstance(),
+			GetModuleHandle(nullptr),
 			this
 		);
 
