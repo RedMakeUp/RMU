@@ -42,6 +42,16 @@ namespace RMU {
 		/// <param name="adapter">The adapter to create d3d12 device</param>
 		ComPtr<ID3D12Device2> CreateDevice(ComPtr<IDXGIAdapter4> adapter) const;
 
+		/// <summary>
+		/// Create a command queue for a specific type
+		/// </summary>
+		ComPtr<ID3D12CommandQueue> CreateCommandQueue(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) const;
+
+		/// <summary>
+		/// Check tearing is supported or not
+		/// </summary>
+		bool CheckTearingSupport() const;
+
 	private:
 		/// <summary>
 		/// Whether all of d3d objects have been created

@@ -7,6 +7,8 @@ namespace RMU {
 		EnableDebugLayer();
 
 		m_device = CreateDevice(GetAdapter());
+
+		m_isTearing = CheckTearingSupport();
 	}
 
 	void Graphics::EnableDebugLayer() const
@@ -111,5 +113,37 @@ namespace RMU {
 		}
 #endif
 		return device2;
+	}
+
+	ComPtr<ID3D12CommandQueue> Graphics::CreateCommandQueue(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) const
+	{
+		ComPtr<ID3D12CommandQueue> queue;
+
+		D3D12_COMMAND_QUEUE_DESC desc = {};
+		desc.Type = type;
+		desc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+		desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		desc.NodeMask = 0;
+
+		ThrowIfFailed(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue)));
+
+		return queue;
+	}
+
+	bool Graphics::CheckTearingSupport() const
+	{
+		BOOL allowTearing = FALSE;
+
+		ComPtr<IDXGIFactory4> factory4;
+		if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&factory4)))) {
+			ComPtr<IDXGIFactory5> factory5;
+			if (SUCCEEDED(factory4.As(&factory5))) {
+				if (FAILED(factory5->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing)))) {
+					allowTearing = FALSE;
+				}
+			}
+		}
+
+		return allowTearing == TRUE;
 	}
 }
