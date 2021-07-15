@@ -80,7 +80,9 @@ project "SandBox"
 
     links
     {
-        "RedMakeUp"
+        "RedMakeUp",
+        "d3d12.lib",
+        "dxgi.lib"
     }
 
     filter "system:Windows"

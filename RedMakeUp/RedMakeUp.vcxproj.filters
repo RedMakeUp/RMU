@@ -15,6 +15,9 @@
     <ClInclude Include="src\RMU\EntryPoint.h">
       <Filter>RMU</Filter>
     </ClInclude>
+    <ClInclude Include="src\RMU\Graphics.h">
+      <Filter>RMU</Filter>
+    </ClInclude>
     <ClInclude Include="src\RMU\Logger.h">
       <Filter>RMU</Filter>
     </ClInclude>
@@ -23,10 +26,12 @@
     </ClInclude>
     <ClInclude Include="src\RedMakeUp.h" />
     <ClInclude Include="src\stdafx.h" />
-    <ClInclude Include="src\RMU\Graphics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RMU\Application.cpp">
+      <Filter>RMU</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RMU\Graphics.cpp">
       <Filter>RMU</Filter>
     </ClCompile>
     <ClCompile Include="src\RMU\Logger.cpp">
@@ -36,6 +41,5 @@
       <Filter>RMU</Filter>
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp" />
-    <ClCompile Include="src\RMU\Graphics.cpp" />
   </ItemGroup>
 </Project>

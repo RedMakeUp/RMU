@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Application.h"
-#include "Window.h"
 
 RMU::Application::Application()
 {
@@ -16,8 +15,10 @@ bool RMU::Application::Init()
 	if(!Window::Register()){
 		return false;
 	}
-
 	m_mainWindow = std::make_unique<Window>(1280, 768, L"RedMakeUp Engine");
+
+	m_graphics = std::make_unique<Graphics>();
+	m_graphics->Init();
 
 	return true;
 }

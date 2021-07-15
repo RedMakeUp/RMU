@@ -1,8 +1,9 @@
 #pragma once
 
-namespace RMU {
-	class Window;
+#include "Window.h"
+#include "Graphics.h"
 
+namespace RMU {
 	class RMU_API Application {
 	public:
 		Application();
@@ -16,6 +17,7 @@ namespace RMU {
 
 	private:
 		std::unique_ptr<Window> m_mainWindow;
+		std::unique_ptr<Graphics> m_graphics;
 	};
 
 	/// <summary>

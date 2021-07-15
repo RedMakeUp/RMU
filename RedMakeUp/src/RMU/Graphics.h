@@ -15,6 +15,11 @@ namespace RMU {
 
 	public:
 		/// <summary>
+		/// Initialize the graphics
+		/// </summary>
+		void Init();
+
+		/// <summary>
 		/// Returns whether all of d3d objects have been created
 		/// </summary>
 		inline bool IsInit() const { return m_isInit; }
@@ -24,6 +29,18 @@ namespace RMU {
 		/// Enabling debug layer before anything about DXGI and D3D12 can help in identifying incorrect usage of APIs.
 		/// </summary>
 		void EnableDebugLayer() const;
+
+		/// <summary>
+		/// Get a d3d12 compatible adapter
+		/// </summary>
+		/// <param name="useWarp">Whether use software rasterizer or not</param>
+		ComPtr<IDXGIAdapter4> GetAdapter(bool useWarp = USE_WARP) const;
+
+		/// <summary>
+		/// Create a d3d12 device which can be considered as a memory context that tracks allocations in GPU memory
+		/// </summary>
+		/// <param name="adapter">The adapter to create d3d12 device</param>
+		ComPtr<ID3D12Device2> CreateDevice(ComPtr<IDXGIAdapter4> adapter) const;
 
 	private:
 		/// <summary>

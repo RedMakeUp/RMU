@@ -6,6 +6,22 @@
 	#error RedMakeUp only support Windows
 #endif
 
+#ifdef  RMU_PLATFORM_WINDOWS
+	// Windows stuff
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>
+	// ComPtr
+	#include <wrl.h>
+	using Microsoft::WRL::ComPtr;
+	// DirectX 12
+	#include <d3d12.h>
+	#include <dxgi1_6.h>
+	#include <d3dcompiler.h>
+	#include <DirectXMath.h>
+	#include <d3dx12.h>// Helper header
+#endif //  RMU_PLATFORM_WINDOWS
+
 /// <summary>
 /// Check calling result of d3d12 api and throw an exception if failed
 /// </summary>
