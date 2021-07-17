@@ -2,13 +2,15 @@
 #include "Graphics.h"
 
 namespace RMU {
-	void Graphics::Init()
+	void Graphics::Init(HWND hWnd)
 	{
 		EnableDebugLayer();
 
 		m_device = CreateDevice(GetAdapter());
 
-		m_isTearing = CheckTearingSupport();
+		m_rtvSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+		// TODO: Create swap chain and descriptor heap below this
 	}
 
 	void Graphics::EnableDebugLayer() const
@@ -115,6 +117,47 @@ namespace RMU {
 		return device2;
 	}
 
+	ComPtr<IDXGISwapChain4> Graphics::CreateSwapChain(HWND hWnd, ComPtr<ID3D12CommandQueue> commandQueue, size_t width, size_t height, size_t bufferCount) const
+	{
+		ComPtr<IDXGISwapChain4> swapChain;
+
+		ComPtr<IDXGIFactory4> factory;
+		UINT flag = 0;
+#ifdef RMU_DEBUG
+		flag = DXGI_CREATE_FACTORY_DEBUG;
+#endif // RMU_DEBUG
+		ThrowIfFailed(CreateDXGIFactory2(flag, IID_PPV_ARGS(&factory)));
+
+		DXGI_SWAP_CHAIN_DESC1 desc = {};
+		desc.Width = width;
+		desc.Height = height;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Stereo = FALSE;
+		desc.SampleDesc = { 1, 0 };
+		desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		desc.BufferCount = BUFFER_NUM;
+		desc.Scaling = DXGI_SCALING_STRETCH;
+		desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
+		desc.Flags = CheckTearingSupport() ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
+
+		ComPtr<IDXGISwapChain1> swapChain1;
+		ThrowIfFailed(factory->CreateSwapChainForHwnd(
+			commandQueue.Get(),
+			hWnd,
+			&desc,
+			nullptr,
+			nullptr,
+			&swapChain1
+		));
+
+		ThrowIfFailed(factory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER));
+		
+		ThrowIfFailed(swapChain1.As(&swapChain));
+
+		return swapChain;
+	}
+
 	ComPtr<ID3D12CommandQueue> Graphics::CreateCommandQueue(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) const
 	{
 		ComPtr<ID3D12CommandQueue> queue;
@@ -128,6 +171,31 @@ namespace RMU {
 		ThrowIfFailed(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue)));
 
 		return queue;
+	}
+
+	ComPtr<ID3D12DescriptorHeap> Graphics::CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, size_t numDescriptors) const
+	{
+		ComPtr<ID3D12DescriptorHeap> heap;
+
+		D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+		desc.NumDescriptors = numDescriptors;
+		desc.Type = type;
+
+		ThrowIfFailed(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
+
+		return heap;
+	}
+
+	void Graphics::UpdateRenderTargetViews(ComPtr<ID3D12Device2> device, ComPtr<IDXGISwapChain4> swapChain, ComPtr<ID3D12DescriptorHeap> heap)
+	{
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(heap->GetCPUDescriptorHandleForHeapStart());
+		for (size_t i = 0; i < BUFFER_NUM; ++i) {
+			ComPtr<ID3D12Resource> backBuffer;
+			ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
+			device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
+			m_backBuffers[i] = backBuffer;
+			rtvHandle.Offset(m_rtvSize);
+		}
 	}
 
 	bool Graphics::CheckTearingSupport() const

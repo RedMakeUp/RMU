@@ -17,7 +17,7 @@ namespace RMU {
 		/// <summary>
 		/// Initialize the graphics
 		/// </summary>
-		void Init();
+		void Init(HWND hWnd);
 
 		/// <summary>
 		/// Returns whether all of d3d objects have been created
@@ -43,9 +43,24 @@ namespace RMU {
 		ComPtr<ID3D12Device2> CreateDevice(ComPtr<IDXGIAdapter4> adapter) const;
 
 		/// <summary>
+		/// Create a DXGI swap chain
+		/// </summary>
+		ComPtr<IDXGISwapChain4> CreateSwapChain(HWND hWnd, ComPtr<ID3D12CommandQueue> commandQueue, size_t width, size_t height, size_t bufferCount) const;
+
+		/// <summary>
 		/// Create a command queue for a specific type
 		/// </summary>
 		ComPtr<ID3D12CommandQueue> CreateCommandQueue(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) const;
+
+		/// <summary>
+		/// Create a descriptor heap with specific type and the number of descripotrs
+		/// </summary>
+		ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, size_t numDescriptors) const;
+
+		/// <summary>
+		/// Get back buffers from the swap chain and create the Render Target View for them in descriptor heap
+		/// </summary>
+		void UpdateRenderTargetViews(ComPtr<ID3D12Device2> device, ComPtr<IDXGISwapChain4> swapChain, ComPtr<ID3D12DescriptorHeap> heap);
 
 		/// <summary>
 		/// Check tearing is supported or not
@@ -69,11 +84,6 @@ namespace RMU {
 		bool m_isFullScreen = false;
 
 		/// <summary>
-		/// Whether tearing is supported
-		/// </summary>
-		bool m_isTearing = false;
-
-		/// <summary>
 		/// Index of current back buffer
 		/// </summary>
 		size_t m_currentBackBuffer = 0;
@@ -87,6 +97,11 @@ namespace RMU {
 		/// Keep trace of the "fence value" for specific back buffer which is used at certain frame
 		/// </summary>
 		uint64_t m_frameFenceValues[BUFFER_NUM] = {};
+
+		/// <summary>
+		/// The size of a render target view
+		/// </summary>
+		UINT m_rtvSize = 0;
 
 		/// <summary>
 		/// Receive the notification that the fence has reached a specific value
