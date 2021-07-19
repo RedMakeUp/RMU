@@ -186,6 +186,60 @@ namespace RMU {
 		return heap;
 	}
 
+	ComPtr<ID3D12CommandAllocator> Graphics::CreateCommandAllocator(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) const
+	{
+		ComPtr<ID3D12CommandAllocator> allocator;
+
+		ThrowIfFailed(device->CreateCommandAllocator(type, IID_PPV_ARGS(&allocator)));
+
+		return allocator;
+	}
+
+	ComPtr<ID3D12GraphicsCommandList> Graphics::CreateCommandList(ComPtr<ID3D12Device2> device, ComPtr<ID3D12CommandAllocator> allocator, D3D12_COMMAND_LIST_TYPE type) const
+	{
+		ComPtr<ID3D12GraphicsCommandList> list;
+
+		ThrowIfFailed(device->CreateCommandList(0, type, allocator.Get(), nullptr, IID_PPV_ARGS(&list)));
+		ThrowIfFailed(list->Close());
+
+		return list;
+	}
+
+	ComPtr<ID3D12Fence> Graphics::CreateFence(ComPtr<ID3D12Device2> device) const
+	{
+		ComPtr<ID3D12Fence> fence;
+
+		ThrowIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
+
+		return fence;
+	}
+
+	HANDLE Graphics::CreateEventHandle() const
+	{
+		HANDLE fenceEvent;
+
+		fenceEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+		if (!fenceEvent) {
+			RMU_LOG_ERROR("Failed to create fence event handle");
+			throw std::exception("Empty Fence Event");
+		}
+
+		return fenceEvent;
+	}
+
+	void Graphics::Signal(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue)
+	{
+		ThrowIfFailed(commandQueue->Signal(fence.Get(), ++fenceValue));
+	}
+
+	void Graphics::WaitForFenceValue(ComPtr<ID3D12Fence> fence, uint64_t fenceValue, HANDLE fenceEvent, std::chrono::milliseconds duration) const
+	{
+		if (fence->GetCompletedValue() < fenceValue) {
+			ThrowIfFailed(fence->SetEventOnCompletion(fenceValue, fenceEvent));
+			::WaitForSingleObject(fenceEvent, static_cast<DWORD>(duration.count()));
+		}
+	}
+
 	void Graphics::UpdateRenderTargetViews(ComPtr<ID3D12Device2> device, ComPtr<IDXGISwapChain4> swapChain, ComPtr<ID3D12DescriptorHeap> heap)
 	{
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(heap->GetCPUDescriptorHandleForHeapStart());

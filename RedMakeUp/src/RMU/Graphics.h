@@ -58,6 +58,37 @@ namespace RMU {
 		ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, size_t numDescriptors) const;
 
 		/// <summary>
+		/// Create a command allocator which is actual memory of commands for specific type
+		/// </summary>
+		ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) const;
+
+		/// <summary>
+		/// Create a command list using a command allocator as its backing memory
+		/// </summary>
+		ComPtr<ID3D12GraphicsCommandList> CreateCommandList(ComPtr<ID3D12Device2> device, ComPtr<ID3D12CommandAllocator> allocator, D3D12_COMMAND_LIST_TYPE type) const;
+
+		/// <summary>
+		/// Create a CPU/GPU synchronization fence whih 0 as initial value
+		/// </summary>
+		ComPtr<ID3D12Fence> CreateFence(ComPtr<ID3D12Device2> device) const;
+
+		/// <summary>
+		/// Create a OS event handle to block the CPU thread until the fence has been signaled
+		/// </summary>
+		HANDLE CreateEventHandle() const;
+
+		/// <summary>
+		/// Signal the fence from GPU.
+		/// fenceValue will be increased by one, and the new value is the target value for which we wait it from GPU
+		/// </summary>
+		void Signal(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue);
+
+		/// <summary>
+		/// Block the thread until the inner value in fence is not less than fenceValue, and duration is the time limit
+		/// </summary>
+		void WaitForFenceValue(ComPtr<ID3D12Fence> fence, uint64_t fenceValue, HANDLE fenceEvent, std::chrono::milliseconds duration = std::chrono::milliseconds::max()) const;
+
+		/// <summary>
 		/// Get back buffers from the swap chain and create the Render Target View for them in descriptor heap
 		/// </summary>
 		void UpdateRenderTargetViews(ComPtr<ID3D12Device2> device, ComPtr<IDXGISwapChain4> swapChain, ComPtr<ID3D12DescriptorHeap> heap);
