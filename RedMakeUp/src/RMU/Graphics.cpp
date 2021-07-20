@@ -117,7 +117,7 @@ namespace RMU {
 		return device2;
 	}
 
-	ComPtr<IDXGISwapChain4> Graphics::CreateSwapChain(HWND hWnd, ComPtr<ID3D12CommandQueue> commandQueue, size_t width, size_t height, size_t bufferCount) const
+	ComPtr<IDXGISwapChain4> Graphics::CreateSwapChain(HWND hWnd, ComPtr<ID3D12CommandQueue> commandQueue, UINT width, UINT height, size_t bufferCount) const
 	{
 		ComPtr<IDXGISwapChain4> swapChain;
 
@@ -173,7 +173,7 @@ namespace RMU {
 		return queue;
 	}
 
-	ComPtr<ID3D12DescriptorHeap> Graphics::CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, size_t numDescriptors) const
+	ComPtr<ID3D12DescriptorHeap> Graphics::CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT numDescriptors) const
 	{
 		ComPtr<ID3D12DescriptorHeap> heap;
 
@@ -240,10 +240,16 @@ namespace RMU {
 		}
 	}
 
+	void Graphics::Flush(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue, HANDLE fenceEvent)
+	{
+		Signal(commandQueue, fence, fenceValue);
+		WaitForFenceValue(fence, fenceValue, fenceEvent);
+	}
+
 	void Graphics::UpdateRenderTargetViews(ComPtr<ID3D12Device2> device, ComPtr<IDXGISwapChain4> swapChain, ComPtr<ID3D12DescriptorHeap> heap)
 	{
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(heap->GetCPUDescriptorHandleForHeapStart());
-		for (size_t i = 0; i < BUFFER_NUM; ++i) {
+		for (UINT i = 0; i < BUFFER_NUM; ++i) {
 			ComPtr<ID3D12Resource> backBuffer;
 			ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
 			device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);

@@ -24,6 +24,8 @@ namespace RMU {
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
+		inline HWND GetHwnd() const noexcept { return m_hWnd; }
+
 		/// <summary>
 		/// Message loop
 		/// </summary>

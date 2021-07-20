@@ -2,6 +2,7 @@
 
 // -- STL Stuffs --------------------------------------------------- //
 #include <memory>
+#include <chrono>
 
 // -- Engine Core -------------------------------------------------- //
 #include "RMU/Common.h"

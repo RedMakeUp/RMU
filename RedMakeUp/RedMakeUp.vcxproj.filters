@@ -26,6 +26,7 @@
     </ClInclude>
     <ClInclude Include="src\RedMakeUp.h" />
     <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\RMU\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RMU\Application.cpp">
@@ -41,5 +42,6 @@
       <Filter>RMU</Filter>
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\RMU\Timer.cpp" />
   </ItemGroup>
 </Project>

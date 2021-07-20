@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include "Graphics.h"
+#include "Timer.h"
 
 namespace RMU {
 	class RMU_API Application {
@@ -13,11 +14,18 @@ namespace RMU {
 
 		int Run();
 
-		void DoFrame();
+		/// <summary>
+		/// Called when a frame is coming
+		/// </summary>
+		void DoFrame(float deltaTime);
+
+	private:
+		void CalcFrameRate(float deltaTime);
 
 	private:
 		std::unique_ptr<Window> m_mainWindow;
 		std::unique_ptr<Graphics> m_graphics;
+		Timer m_timer;
 	};
 
 	/// <summary>

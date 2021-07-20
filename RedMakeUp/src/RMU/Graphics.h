@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Common.h"
+
 namespace RMU {
 	class Graphics {
 	public:
 		/// <summary>
 		/// Number of back buffers
 		/// </summary>
-		static const size_t BUFFER_NUM = 3;
+		static const UINT BUFFER_NUM = 3;
 		
 		/// <summary>
 		/// Whether to use software rasterizer or not
@@ -45,7 +47,7 @@ namespace RMU {
 		/// <summary>
 		/// Create a DXGI swap chain
 		/// </summary>
-		ComPtr<IDXGISwapChain4> CreateSwapChain(HWND hWnd, ComPtr<ID3D12CommandQueue> commandQueue, size_t width, size_t height, size_t bufferCount) const;
+		ComPtr<IDXGISwapChain4> CreateSwapChain(HWND hWnd, ComPtr<ID3D12CommandQueue> commandQueue, UINT width, UINT height, size_t bufferCount) const;
 
 		/// <summary>
 		/// Create a command queue for a specific type
@@ -55,7 +57,7 @@ namespace RMU {
 		/// <summary>
 		/// Create a descriptor heap with specific type and the number of descripotrs
 		/// </summary>
-		ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, size_t numDescriptors) const;
+		ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT numDescriptors) const;
 
 		/// <summary>
 		/// Create a command allocator which is actual memory of commands for specific type
@@ -87,6 +89,11 @@ namespace RMU {
 		/// Block the thread until the inner value in fence is not less than fenceValue, and duration is the time limit
 		/// </summary>
 		void WaitForFenceValue(ComPtr<ID3D12Fence> fence, uint64_t fenceValue, HANDLE fenceEvent, std::chrono::milliseconds duration = std::chrono::milliseconds::max()) const;
+
+		/// <summary>
+		/// This function is used to ensure that any commands previously executed on the GPU have finished executing
+		/// </summary>
+		void Flush(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue, HANDLE fenceEvent);
 
 		/// <summary>
 		/// Get back buffers from the swap chain and create the Render Target View for them in descriptor heap
